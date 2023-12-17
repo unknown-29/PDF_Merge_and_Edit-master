@@ -154,9 +154,9 @@ def pageUpdate():
     updatedPagePDF = PyPDF2.PdfReader(updatedPage)
 
     updatedPDF = PyPDF2.PdfWriter()
-    updatedPDF.cloneDocumentFromReader(originalPDF)
+    updatedPDF.clone_document_from_reader(originalPDF)
     try:
-        updatedPDF.insertPage(updatedPagePDF.getPage(pageWithUpdate - 1), pageToUpdate - 1)
+        updatedPDF.insert_page(updatedPagePDF.pages[pageWithUpdate - 1], pageToUpdate - 1)
     except IndexError:
         popup("Please check if page number is within range")
 
@@ -164,9 +164,9 @@ def pageUpdate():
 
     pdfOut = PyPDF2.PdfWriter()
 
-    for i in range(updatedPDF.getNumPages()):
+    for i in range(len(updatedPDF.pages)):
         if i != pageToUpdate:
-            pdfOut.addPage(updatedPDF.getPage(i))
+            pdfOut.add_page(updatedPDF.pages[i])
 
     pdfOut.write(outputFile)
     outputFile.close()
@@ -218,9 +218,9 @@ def insertPage():
     PDFwithInsert = PyPDF2.PdfReader(fileWithInsert)
 
     updatedPDF = PyPDF2.PdfWriter()
-    updatedPDF.cloneDocumentFromReader(originalPDF)
+    updatedPDF.clone_document_from_reader(originalPDF)
     try:
-        updatedPDF.insertPage(PDFwithInsert.getPage(pageWithInsert - 1), pageToInsert - 1)
+        updatedPDF.insert_page(PDFwithInsert.pages[pageWithInsert - 1], pageToInsert - 1)
     except IndexError:
         popup("Please check if page number is within range")
 
@@ -228,8 +228,8 @@ def insertPage():
 
     pdfOut = PyPDF2.PdfWriter()
 
-    for i in range(updatedPDF.getNumPages()):
-        pdfOut.addPage(updatedPDF.getPage(i))
+    for i in range(len(updatedPDF.pages)):
+        pdfOut.add_page(updatedPDF.pages[i])
 
     pdfOut.write(outputFile)
     outputFile.close()
@@ -268,9 +268,9 @@ def deletePage():
     originalPDF = PyPDF2.PdfReader(updateFile)
 
     updatedPDF = PyPDF2.PdfWriter()
-    updatedPDF.cloneDocumentFromReader(originalPDF)
+    updatedPDF.clone_document_from_reader(originalPDF)
     try:
-        updatedPDF.getPage(pageToDelete - 1)
+        updatedPDF.pages[pageToDelete - 1]
     except IndexError:
         popup("Please check if page number is within range")
 
@@ -278,9 +278,9 @@ def deletePage():
 
     pdfOut = PyPDF2.PdfWriter()
 
-    for i in range(updatedPDF.getNumPages()):
+    for i in range(len(updatedPDF.pages)):
         if i != pageToDelete - 1:
-            pdfOut.addPage(updatedPDF.getPage(i))
+            pdfOut.add_page(updatedPDF.pages[i])
 
     pdfOut.write(outputFile)
     outputFile.close()
@@ -521,8 +521,8 @@ def images_to_pdf():
     finished(output_pdf_path, "Images to PDF", imgToPdfWindow)
 
 
-def instructions():
-    webbrowser.open("https://github.com/simonwongwong/PDF_Merge_and_Edit", new=2, autoraise=True)
+def edit_pdf():
+    webbrowser.open_new_tab("https://www.pdfescape.com/online-pdf-editor/")
 
 selector = tk.Tk()
 selector.configure(padx=10, pady=10)
@@ -547,5 +547,6 @@ tk.Button(selector, text="Add Watermark", command=add_watermark_gui).grid(row=8,
 # Add the "Images to PDF" button to the GUI
 tk.Button(selector, text="Images to PDF", command=images_to_pdf).grid(row=9, column=1, sticky=stickyFill, pady=3, padx=5)
 
+tk.Button(selector, text="edit pdf", command=edit_pdf).grid(row=10, column=1, sticky=stickyFill, pady=3, padx=5)
 selector.protocol("WM_DELETE_WINDOW", sys.exit)
 selector.mainloop()
